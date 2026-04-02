@@ -41,6 +41,7 @@
     #progress-bar {
       position: fixed; top: 0; left: 0; height: 3px;
       background: linear-gradient(90deg, var(--accent), #7b61ff);
+      border-radius: 2px;
       z-index: 1001; transition: width 0.1s linear;
     }
 
@@ -215,7 +216,13 @@
       cursor: zoom-out;
     }
     .lightbox.active { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; cursor: default; }
+    .lightbox img {
+      max-width: 90vw; max-height: 90vh; object-fit: contain;
+      border-radius: 8px; cursor: default;
+      opacity: 0; transform: scale(0.95);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .lightbox.active img { opacity: 1; transform: scale(1); }
     .lightbox-close {
       position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none;
       color: white; font-size: 2rem; cursor: pointer; z-index: 2001;
@@ -264,6 +271,7 @@
   <div id="progress-bar"></div>
 
   <!-- Navigation -->
+  <header>
   <nav id="navbar">
     <a href="#hero" class="nav-logo"><span>&gt; </span>yuta.dev</a>
     <ul class="nav-links" id="nav-links">
@@ -272,10 +280,11 @@
       <li><a href="#works">Works</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="メニュー">
+    <button class="hamburger" id="hamburger" aria-label="メニュー" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </nav>
+  </header>
 
   <!-- Hero -->
   <section id="hero">
@@ -548,31 +557,34 @@
   </div>
 
   <script>
-    // Scroll Progress
+    // Scroll handlers (unified with requestAnimationFrame throttle)
     const progressBar = document.getElementById('progress-bar');
-    window.addEventListener('scroll', () => {
-      const pct = document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100;
-      progressBar.style.width = pct + '%';
-    });
-
-    // Navbar
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
-
-    // Active nav link
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-links a');
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
-      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          const scrollTop = document.documentElement.scrollTop;
+          const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          progressBar.style.width = (scrollTop / scrollHeight * 100) + '%';
+          navbar.classList.toggle('scrolled', scrollTop > 50);
+          let current = '';
+          sections.forEach(s => { if (scrollTop >= s.offsetTop - 100) current = s.id; });
+          navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
     });
 
     // Mobile menu
     const hamburger = document.getElementById('hamburger');
     const navLinksEl = document.getElementById('nav-links');
     hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('active');
+      const isOpen = hamburger.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', isOpen);
       navLinksEl.classList.toggle('open');
     });
     navLinksEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
