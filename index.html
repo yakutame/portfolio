@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yuta | AI Developer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ===== CSS Variables ===== */
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a2e;
+      --bg-card-hover: #222240;
+      --accent: #00d4ff;
+      --accent-dim: rgba(0, 212, 255, 0.15);
+      --accent-glow: rgba(0, 212, 255, 0.4);
+      --text-primary: #e8e8f0;
+      --text-secondary: #8888a0;
+      --text-dim: #555570;
+      --border: #2a2a40;
+      --font-sans: 'Noto Sans JP', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ===== Reset & Base ===== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ===== Scroll Progress Bar ===== */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #7b61ff);
+      z-index: 1001;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== Navigation ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, padding 0.3s;
+    }
+
+    nav.scrolled {
+      border-bottom-color: var(--border);
+      padding: 0.7rem 2rem;
+    }
+
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--text-dim);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Mobile menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        flex-direction: column;
+        background: var(--bg-secondary);
+        padding: 5rem 2rem;
+        gap: 1.5rem;
+        transition: right 0.3s;
+        border-left: 1px solid var(--border);
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+    }
+
+    /* ===== Sections Common ===== */
+    section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 3rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ===== Fade In Animation ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== Hero ===== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding-top: 80px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    .hero-terminal {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+      background: var(--bg-secondary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .hero-terminal .prompt {
+      color: var(--accent);
+    }
+
+    .hero-name {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .hero-name .highlight {
+      background: linear-gradient(135deg, var(--accent), #7b61ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--text-secondary);
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: linear-gradient(135deg, var(--accent), #7b61ff);
+      color: var(--bg-primary);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--accent-glow);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator svg {
+      stroke: var(--text-dim);
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(10px);
+      }
+    }
+
+    /* ===== About ===== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-text p {
+      color: var(--text-secondary);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .about-text strong {
+      color: var(--text-primary);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--border));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.8rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      transform: translateX(-4px);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Skills ===== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .skill-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .skill-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .skill-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .skill-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Works ===== */
+    .works-filter {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.5rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .work-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+    .work-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .work-card.hidden {
+      display: none;
+    }
+
+    .work-header {
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .work-number {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.2rem 0.7rem;
+      border-radius: 10px;
+    }
+
+    .work-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+    }
+
+    .work-body {
+      padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .work-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .work-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .work-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .work-tech span {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    /* ===== Contact ===== */
+    #contact {
+      text-align: center;
+    }
+
+    .contact-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+
+    .contact-link svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== Utility ===== */
+    @media (max-width: 768px) {
+      section {
+        padding: 4rem 1.2rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .works-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Progress Bar -->
+  <div id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo"><span>&gt; </span>yuta.dev</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-terminal">
+      <span class="prompt">$</span> claude --mode portfolio
+    </div>
+    <h1 class="hero-name">
+      アイデアを<span class="highlight">形に。</span>
+    </h1>
+    <p class="hero-tagline">Yuta | AI Developer & Creator</p>
+    <p class="hero-sub">
+      薬剤師 × フリーランス × AI。<br>
+      学んだ技術で、思いついたものをつくる。
+    </p>
+    <a href="#works" class="hero-cta">
+      Works を見る
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 17l9.2-9.2M7 7h10v10" />
+      </svg>
+    </a>
+    <div class="scroll-indicator">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M12 5v14M5 12l7 7 7-7" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="fade-in">
+      <p class="section-label">// About</p>
+      <h2 class="section-title">About Me</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p>
+          はじめまして、<strong>ゆうた</strong>です。
+        </p>
+        <p>
+          薬剤師として薬局や商社で勤務した後、副業に興味を持ち<strong>Webライティング</strong>の世界へ。
+          その後<strong>YouTube</strong>に活動の軸を移し、現在はYouTubeアドセンス広告をメインとした
+          <strong>フリーランス</strong>として活動しています。
+        </p>
+        <p>
+          ユニコさんの無料セミナーで<strong>AIの可能性</strong>に触れたことをきっかけに、AI開発の学習をスタート。
+          薬剤師としての論理的思考力とAI技術を組み合わせ、業務効率化や自動化ツールの開発に取り組んでいます。
+        </p>
+      </div>
+      <div class="timeline fade-in">
+        <div class="timeline-item">
+          <div class="timeline-year">Pharmacist</div>
+          <div class="timeline-title">薬剤師として勤務</div>
+          <div class="timeline-desc">薬局・商社での実務経験を積む</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Side Business</div>
+          <div class="timeline-title">副業 / Webライティング</div>
+          <div class="timeline-desc">ライティングスキルを習得し、副業の世界へ</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">YouTube</div>
+          <div class="timeline-title">YouTubeフリーランス</div>
+          <div class="timeline-desc">アドセンス広告をメインに独立</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Now</div>
+          <div class="timeline-title">AI開発を学習中</div>
+          <div class="timeline-desc">ユニコAIエージェント開発コースでスキルアップ中</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="fade-in">
+      <p class="section-label">// Skills</p>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F916;</div>
+        <div class="skill-name">Claude / Claude Code</div>
+        <div class="skill-desc">AIアシスタントを活用した開発・自動化</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x2728;</div>
+        <div class="skill-name">Gemini / OpenAI</div>
+        <div class="skill-desc">マルチモーダルAI APIの活用</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F40D;</div>
+        <div class="skill-name">Python</div>
+        <div class="skill-desc">Streamlit, スクリプト開発</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x269B;</div>
+        <div class="skill-name">Next.js / React</div>
+        <div class="skill-desc">モダンなWebアプリケーション開発</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F4AC;</div>
+        <div class="skill-name">Dify</div>
+        <div class="skill-desc">ノーコードAIワークフロー構築</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F4CA;</div>
+        <div class="skill-name">GAS / YouTube API</div>
+        <div class="skill-desc">Google系サービスの自動化・連携</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F4DD;</div>
+        <div class="skill-name">Cursor</div>
+        <div class="skill-desc">AI搭載エディタでの高速開発</div>
+      </div>
+      <div class="skill-card fade-in">
+        <div class="skill-icon">&#x1F3AC;</div>
+        <div class="skill-name">YouTube運営</div>
+        <div class="skill-desc">コンテンツ企画・分析・収益化</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Works -->
+  <section id="works">
+    <div class="fade-in">
+      <p class="section-label">// Works</p>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <div class="works-filter fade-in">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="web">Web App</button>
+      <button class="filter-btn" data-filter="ai">AI Tool</button>
+      <button class="filter-btn" data-filter="automation">Automation</button>
+    </div>
+    <div class="works-grid">
+      <!-- Work 1 -->
+      <div class="work-card fade-in" data-category="web">
+        <div class="work-header">
+          <span class="work-number">01</span>
+          <span class="work-tag">Web App</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">5ch風 匿名掲示板</h3>
+          <p class="work-desc">
+            Next.jsで構築した5ch風の匿名掲示板アプリ。スレッド作成・投稿・表示機能を実装し、SQLiteでデータ管理。
+          </p>
+          <div class="work-tech">
+            <span>Next.js</span><span>React</span><span>SQLite</span><span>TypeScript</span>
+          </div>
+        </div>
+      </div>
+      <!-- Work 2 -->
+      <div class="work-card fade-in" data-category="web">
+        <div class="work-header">
+          <span class="work-number">02</span>
+          <span class="work-tag">Web App</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">ランディングページ制作</h3>
+          <p class="work-desc">
+            競合分析と情報設計に基づいて構築したLP。ヒーロー画像やインストラクター紹介など、コンバージョンを意識した設計。
+          </p>
+          <div class="work-tech">
+            <span>HTML</span><span>CSS</span><span>競合分析</span><span>情報設計</span>
+          </div>
+        </div>
+      </div>
+      <!-- Work 3 -->
+      <div class="work-card fade-in" data-category="ai">
+        <div class="work-header">
+          <span class="work-number">03</span>
+          <span class="work-tag">AI Tool</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">テキスト生成ツール</h3>
+          <p class="work-desc">
+            目的に応じたツールを選び、フォームに入力するだけでAIがテキストを自動生成するWebアプリ。ブログ・キャッチコピー・SNS投稿など多用途対応。
+          </p>
+          <div class="work-tech">
+            <span>shadcn/ui</span><span>SQLite</span><span>AI API</span><span>Framer Motion</span>
+          </div>
+        </div>
+      </div>
+      <!-- Work 4 -->
+      <div class="work-card fade-in" data-category="ai">
+        <div class="work-header">
+          <span class="work-number">04</span>
+          <span class="work-tag">AI Tool</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">写真→テキスト変換アプリ</h3>
+          <p class="work-desc">
+            画像をアップロードするとAIがテキストを抽出・解析するアプリ。Gemini・OpenAI両対応で、フォールバック機能付き。
+          </p>
+          <div class="work-tech">
+            <span>Python</span><span>Streamlit</span><span>Gemini</span><span>OpenAI</span>
+          </div>
+        </div>
+      </div>
+      <!-- Work 5 -->
+      <div class="work-card fade-in" data-category="automation">
+        <div class="work-header">
+          <span class="work-number">05</span>
+          <span class="work-tag">Automation</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">YouTube分析自動化ツール</h3>
+          <p class="work-desc">
+            YouTube Data APIとGASを連携し、チャンネル動画の再生数・タイトル・URLをスプレッドシートに自動出力するツール。
+          </p>
+          <div class="work-tech">
+            <span>GAS</span><span>YouTube API</span><span>Spreadsheet</span>
+          </div>
+        </div>
+      </div>
+      <!-- Work 6 -->
+      <div class="work-card fade-in" data-category="ai">
+        <div class="work-header">
+          <span class="work-number">06</span>
+          <span class="work-tag">AI Tool</span>
+        </div>
+        <div class="work-body">
+          <h3 class="work-title">LINE風チャットボット</h3>
+          <p class="work-desc">
+            Dify APIをバックエンドに、StreamlitでLINE風UIのチャットボットを構築。会話コンテキストを維持した自然な対話を実現。
+          </p>
+          <div class="work-tech">
+            <span>Streamlit</span><span>Dify API</span><span>Python</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="fade-in">
+      <p class="section-label">// Contact</p>
+      <h2 class="section-title">Get in Touch</h2>
+      <p class="contact-text">
+        お仕事のご依頼やご相談など、お気軽にご連絡ください。
+      </p>
+      <div class="contact-links">
+        <a href="https://x.com/LS1eGUJOPI71847" class="contact-link" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+          X (Twitter)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Yuta &mdash; Built with Claude Code</p>
+  </footer>
+
+  <script>
+    // === Scroll Progress Bar ===
+    const progressBar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      progressBar.style.width = (scrollTop / scrollHeight * 100) + '%';
+    });
+
+    // === Navbar Scroll Effect ===
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // === Active Nav Link ===
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.getAttribute('id');
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    });
+
+    // === Mobile Menu ===
+    const hamburger = document.getElementById('hamburger');
+    const navLinksEl = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinksEl.classList.toggle('open');
+    });
+    navLinksEl.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinksEl.classList.remove('open');
+      });
+    });
+
+    // === Fade In on Scroll ===
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), index * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    // === Works Filter ===
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const workCards = document.querySelectorAll('.work-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        workCards.forEach(card => {
+          if (filter === 'all' || card.dataset.category === filter) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
